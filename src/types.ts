@@ -38,7 +38,7 @@ export interface GridConfig {
 }
 
 export interface FileConfigs {
-    templateFile?: File | Buffer;
+    templateFile?: File | Buffer | string;
     docProps?: DocProps;
     hostName?: string;
     templateSettings?: TemplateSettings;

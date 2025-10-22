@@ -33,10 +33,17 @@ export const generateTableWorkbookFromHtml = async (htmlTable: HTMLTableElement,
 };
 
 export const generateTableWorkbookFromGrid = async (grid: Grid, fileConfigs?: FileConfigs): Promise<Blob> => {
-    const zip: JSZip =
-        fileConfigs?.templateFile === undefined
-            ? await JSZip.loadAsync(SIMPLE_BLANK_TABLE_TEMPLATE, { base64: true })
-            : await JSZip.loadAsync(fileConfigs.templateFile as Blob);
+
+    let zip: JSZip;
+    if (fileConfigs?.templateFile === undefined) {
+        zip = await JSZip.loadAsync(SIMPLE_BLANK_TABLE_TEMPLATE, { base64: true });
+    } else {
+        if(fileConfigs.templateFile instanceof String || typeof fileConfigs.templateFile === "string") {
+            zip = await JSZip.loadAsync(fileConfigs.templateFile as string, { base64: true });
+        } else {
+            zip = await JSZip.loadAsync(fileConfigs.templateFile as Blob);
+        }
+    }
 
     const tableData = gridUtils.parseToTableData(grid);
     if (tableData === undefined) {
